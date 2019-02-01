@@ -3,6 +3,8 @@
  * This component represents an individual item in the multi-select drop-down
  */
 import React, {Component} from 'react';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faTrashAlt} from '@fortawesome/free-solid-svg-icons';
 
 export type Option = {
     value: any,
@@ -14,31 +16,47 @@ type DefaultItemRendererProps = {
     checked: boolean,
     option: Option,
     disabled?: boolean,
-
-    onClick: (event: MouseEvent) => void
+    onClick: (event: MouseEvent) => void,
+    handleEnterPress?: (inputString: string) => void,
+    handleClickPressOnIcon?: (email: string) => void
 };
 
 class DefaultItemRenderer extends Component<DefaultItemRendererProps> {
+    constructor(props) {
+        super(props);
+    }
+
+    handleClick = () => e => {
+        e.preventDefault();
+        this.props.handleClickPressOnIcon(this.props.option.label);
+        e.stopPropagation();
+    };
+
     render() {
-        const {checked, option, onClick, disabled} = this.props;
+        const {checked, option, disabled} = this.props;
 
         const style = {
             ...styles.label,
             ...(disabled ? styles.labelDisabled : undefined),
         };
+        const margin = {
+            ...styles.marginRight,
+        };
+
 
         return <span
             className="item-renderer"
         >
             <input
                 type="checkbox"
-                onChange={onClick}
+                onChange={this.props.onClick}
                 checked={checked}
                 tabIndex="-1"
                 disabled={disabled}
             />
             <span style={style}>
                 {option.label}
+                {!!option.value && <FontAwesomeIcon icon={faTrashAlt} style={margin} size="xs" color='red' pull='right' onClick={this.handleClick()}/>}
             </span>
         </span>;
     }
@@ -51,6 +69,8 @@ type SelectItemProps = {
     focused?: boolean,
     disabled?: boolean,
     onSelectionChanged: (checked: boolean) => void,
+    handleEnterPress?: (inputString: string) => void,
+    handleClickPressOnIcon?: (email: string) => void,
     onClick: (event: MouseEvent) => void
 };
 type SelectItemState = {
@@ -58,6 +78,10 @@ type SelectItemState = {
 };
 
 class SelectItem extends Component<SelectItemProps, SelectItemState> {
+    // eslint-disable-next-line react/sort-comp
+    constructor(props) {
+        super(props);
+    }
     static defaultProps = {
         ItemRenderer: DefaultItemRenderer,
     }
@@ -137,6 +161,8 @@ class SelectItem extends Component<SelectItemProps, SelectItemState> {
         >
             <ItemRenderer
                 option={option}
+                handleEnterPress={this.props.handleEnterPress}
+                handleClickPressOnIcon={this.props.handleClickPressOnIcon}
                 checked={checked}
                 onClick={this.handleClick}
                 disabled={disabled}
@@ -169,6 +195,13 @@ const styles = {
     },
     labelDisabled: {
         opacity: 0.5,
+    },
+    trashIcon: {
+        color: 'red',
+    },
+    marginRight: {
+        marginLeft: '10px',
+        marginTop: "3px",
     },
 };
 

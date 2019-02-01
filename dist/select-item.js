@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
@@ -8,9 +8,13 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = require("react");
+var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
+
+var _reactFontawesome = require('@fortawesome/react-fontawesome');
+
+var _freeSolidSvgIcons = require('@fortawesome/free-solid-svg-icons');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -27,40 +31,51 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var DefaultItemRenderer = function (_Component) {
     _inherits(DefaultItemRenderer, _Component);
 
-    function DefaultItemRenderer() {
+    function DefaultItemRenderer(props) {
         _classCallCheck(this, DefaultItemRenderer);
 
-        return _possibleConstructorReturn(this, (DefaultItemRenderer.__proto__ || Object.getPrototypeOf(DefaultItemRenderer)).apply(this, arguments));
+        var _this = _possibleConstructorReturn(this, (DefaultItemRenderer.__proto__ || Object.getPrototypeOf(DefaultItemRenderer)).call(this, props));
+
+        _this.handleClick = function () {
+            return function (e) {
+                e.preventDefault();
+                _this.props.handleClickPressOnIcon(_this.props.option.label);
+                e.stopPropagation();
+            };
+        };
+
+        return _this;
     }
 
     _createClass(DefaultItemRenderer, [{
-        key: "render",
+        key: 'render',
         value: function render() {
             var _props = this.props,
                 checked = _props.checked,
                 option = _props.option,
-                onClick = _props.onClick,
                 disabled = _props.disabled;
 
 
             var style = _extends({}, styles.label, disabled ? styles.labelDisabled : undefined);
+            var margin = _extends({}, styles.marginRight);
 
             return _react2.default.createElement(
-                "span",
+                'span',
                 {
-                    className: "item-renderer"
+                    className: 'item-renderer'
                 },
-                _react2.default.createElement("input", {
-                    type: "checkbox",
-                    onChange: onClick,
+                _react2.default.createElement('input', {
+                    type: 'checkbox',
+                    onChange: this.props.onClick,
                     checked: checked,
-                    tabIndex: "-1",
+                    tabIndex: '-1',
                     disabled: disabled
                 }),
                 _react2.default.createElement(
-                    "span",
+                    'span',
                     { style: style },
-                    option.label
+                    option.label,
+                    !!option.value && _react2.default.createElement(_reactFontawesome.FontAwesomeIcon, { icon: _freeSolidSvgIcons.faTrashAlt, style: margin, size: 'xs', color: 'red', pull: 'right', onClick: this.handleClick() })
                 )
             );
         }
@@ -72,37 +87,40 @@ var DefaultItemRenderer = function (_Component) {
 var SelectItem = function (_Component2) {
     _inherits(SelectItem, _Component2);
 
-    function SelectItem() {
-        var _ref;
-
-        var _temp, _this2, _ret;
-
+    // eslint-disable-next-line react/sort-comp
+    function SelectItem(props) {
         _classCallCheck(this, SelectItem);
 
-        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-            args[_key] = arguments[_key];
-        }
+        var _this2 = _possibleConstructorReturn(this, (SelectItem.__proto__ || Object.getPrototypeOf(SelectItem)).call(this, props));
 
-        return _ret = (_temp = (_this2 = _possibleConstructorReturn(this, (_ref = SelectItem.__proto__ || Object.getPrototypeOf(SelectItem)).call.apply(_ref, [this].concat(args))), _this2), _this2.state = {
+        _this2.state = {
             hovered: false
-        }, _this2.onChecked = function (e) {
+        };
+
+        _this2.onChecked = function (e) {
             var onSelectionChanged = _this2.props.onSelectionChanged;
             var checked = e.target.checked;
 
 
             onSelectionChanged(checked);
-        }, _this2.toggleChecked = function () {
+        };
+
+        _this2.toggleChecked = function () {
             var _this2$props = _this2.props,
                 checked = _this2$props.checked,
                 onSelectionChanged = _this2$props.onSelectionChanged;
 
             onSelectionChanged(!checked);
-        }, _this2.handleClick = function (e) {
+        };
+
+        _this2.handleClick = function (e) {
             var onClick = _this2.props.onClick;
 
             _this2.toggleChecked();
             onClick(e);
-        }, _this2.handleKeyDown = function (e) {
+        };
+
+        _this2.handleKeyDown = function (e) {
             switch (e.which) {
                 case 13: // Enter
                 case 32:
@@ -114,21 +132,23 @@ var SelectItem = function (_Component2) {
             }
 
             e.preventDefault();
-        }, _temp), _possibleConstructorReturn(_this2, _ret);
+        };
+
+        return _this2;
     }
 
     _createClass(SelectItem, [{
-        key: "componentDidMount",
+        key: 'componentDidMount',
         value: function componentDidMount() {
             this.updateFocus();
         }
     }, {
-        key: "componentDidUpdate",
+        key: 'componentDidUpdate',
         value: function componentDidUpdate() {
             this.updateFocus();
         }
     }, {
-        key: "updateFocus",
+        key: 'updateFocus',
         value: function updateFocus() {
             var focused = this.props.focused;
 
@@ -138,7 +158,7 @@ var SelectItem = function (_Component2) {
             }
         }
     }, {
-        key: "render",
+        key: 'render',
         value: function render() {
             var _this3 = this;
 
@@ -154,16 +174,16 @@ var SelectItem = function (_Component2) {
             var focusStyle = focused || hovered ? styles.itemContainerHover : undefined;
 
             return _react2.default.createElement(
-                "label",
+                'label',
                 {
-                    className: "select-item",
-                    role: "option",
-                    "aria-selected": checked,
+                    className: 'select-item',
+                    role: 'option',
+                    'aria-selected': checked,
                     selected: checked,
-                    tabIndex: "-1",
+                    tabIndex: '-1',
                     style: _extends({}, styles.itemContainer, focusStyle),
-                    ref: function ref(_ref2) {
-                        return _this3.itemRef = _ref2;
+                    ref: function ref(_ref) {
+                        return _this3.itemRef = _ref;
                     },
                     onKeyDown: this.handleKeyDown,
                     onMouseOver: function onMouseOver() {
@@ -175,6 +195,8 @@ var SelectItem = function (_Component2) {
                 },
                 _react2.default.createElement(ItemRenderer, {
                     option: option,
+                    handleEnterPress: this.props.handleEnterPress,
+                    handleClickPressOnIcon: this.props.handleClickPressOnIcon,
                     checked: checked,
                     onClick: this.handleClick,
                     disabled: disabled
@@ -214,6 +236,13 @@ var styles = {
     },
     labelDisabled: {
         opacity: 0.5
+    },
+    trashIcon: {
+        color: 'red'
+    },
+    marginRight: {
+        marginLeft: '10px',
+        marginTop: "3px"
     }
 };
 

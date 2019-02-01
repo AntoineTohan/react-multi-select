@@ -13,14 +13,18 @@ import type {
 type Props = {
     focusIndex: number,
     ItemRenderer?: Function,
-    options: Array<Option>,
     selected: Array<Object>,
     onSelectedChanged: (selected: any) => void,
+    handleEnterPress?: (inputString: string) => void,
+    handleClickPressOnIcon?: (email: string) => void,
     onClick: (event: MouseEvent, index: number) => void,
     disabled?: boolean
 };
 
 class SelectList extends Component<Props> {
+    constructor(props) {
+        super(props);
+    }
     handleSelectionChanged = (option: Option, checked: boolean) => {
         const {selected, onSelectedChanged, disabled} = this.props;
 
@@ -56,6 +60,8 @@ class SelectList extends Component<Props> {
                 key={o.hasOwnProperty("key") ? o.key : i}
             >
                 <SelectItem
+                    handleEnterPress={this.props.handleEnterPress}
+                    handleClickPressOnIcon={this.props.handleClickPressOnIcon}
                     focused={focusIndex === i}
                     option={o}
                     onSelectionChanged={c => this.handleSelectionChanged(o, c)}

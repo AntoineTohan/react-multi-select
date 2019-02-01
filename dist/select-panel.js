@@ -22,6 +22,10 @@ var _selectList = require('./select-list.js');
 
 var _selectList2 = _interopRequireDefault(_selectList);
 
+var _getString = require('./get-string.js');
+
+var _getString2 = _interopRequireDefault(_getString);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -39,22 +43,18 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var SelectPanel = function (_Component) {
     _inherits(SelectPanel, _Component);
 
-    function SelectPanel() {
-        var _ref;
-
-        var _temp, _this, _ret;
-
+    function SelectPanel(props) {
         _classCallCheck(this, SelectPanel);
 
-        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-            args[_key] = arguments[_key];
-        }
+        var _this = _possibleConstructorReturn(this, (SelectPanel.__proto__ || Object.getPrototypeOf(SelectPanel)).call(this, props));
 
-        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = SelectPanel.__proto__ || Object.getPrototypeOf(SelectPanel)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+        _this.state = {
             searchHasFocus: false,
             searchText: "",
             focusIndex: 0
-        }, _this.selectAll = function () {
+        };
+
+        _this.selectAll = function () {
             var _this$props = _this.props,
                 onSelectedChanged = _this$props.onSelectedChanged,
                 options = _this$props.options;
@@ -64,27 +64,39 @@ var SelectPanel = function (_Component) {
             });
 
             onSelectedChanged(allValues);
-        }, _this.selectNone = function () {
+        };
+
+        _this.selectNone = function () {
             var onSelectedChanged = _this.props.onSelectedChanged;
 
 
             onSelectedChanged([]);
-        }, _this.selectAllChanged = function (checked) {
+        };
+
+        _this.selectAllChanged = function (checked) {
             if (checked) {
                 _this.selectAll();
             } else {
                 _this.selectNone();
             }
-        }, _this.handleSearchChange = function (e) {
+        };
+
+        _this.handleSearchChange = function (e) {
             _this.setState({
                 searchText: e.target.value,
                 focusIndex: -1
             });
-        }, _this.handleItemClicked = function (index) {
+        };
+
+        _this.handleItemClicked = function (index) {
             _this.setState({ focusIndex: index });
-        }, _this.clearSearch = function () {
+        };
+
+        _this.clearSearch = function () {
             _this.setState({ searchText: "" });
-        }, _this.handleKeyDown = function (e) {
+        };
+
+        _this.handleKeyDown = function (e) {
             switch (e.which) {
                 case 38:
                     // Up Arrow
@@ -102,18 +114,34 @@ var SelectPanel = function (_Component) {
 
                     _this.updateFocus(1);
                     break;
+                case 13:
+                    // Enter
+                    if (e.altKey) {
+                        return;
+                    }
+
+                    _this.props.handleEnterPress(_this.state.searchText);
+                    document.getElementById('searchBar').value = '';
+                    _this.setState({
+                        searchText: ''
+                    });
+                    break;
                 default:
                     return;
             }
 
             e.stopPropagation();
             e.preventDefault();
-        }, _this.handleSearchFocus = function (searchHasFocus) {
+        };
+
+        _this.handleSearchFocus = function (searchHasFocus) {
             _this.setState({
                 searchHasFocus: searchHasFocus,
                 focusIndex: -1
             });
-        }, _temp), _possibleConstructorReturn(_this, _ret);
+        };
+
+        return _this;
     }
 
     _createClass(SelectPanel, [{
@@ -162,13 +190,15 @@ var SelectPanel = function (_Component) {
                 selectAllLabel = _props3.selectAllLabel,
                 disabled = _props3.disabled,
                 disableSearch = _props3.disableSearch,
-                hasSelectAll = _props3.hasSelectAll;
+                overrideStrings = _props3.overrideStrings;
 
 
             var selectAllOption = {
-                label: selectAllLabel || "Select All",
+                label: selectAllLabel || (0, _getString2.default)("selectAll", overrideStrings),
                 value: ""
             };
+
+            var style = _extends({}, styles.label, disabled ? styles.labelDisabled : undefined);
 
             var focusedSearchStyle = searchHasFocus ? styles.searchFocused : undefined;
 
@@ -184,7 +214,7 @@ var SelectPanel = function (_Component) {
                     'div',
                     { style: styles.searchContainer },
                     _react2.default.createElement('input', {
-                        placeholder: 'Search',
+                        placeholder: (0, _getString2.default)("search", overrideStrings),
                         type: 'text',
                         onChange: this.handleSearchChange,
                         style: _extends({}, styles.search, focusedSearchStyle),
@@ -193,10 +223,13 @@ var SelectPanel = function (_Component) {
                         },
                         onBlur: function onBlur() {
                             return _this2.handleSearchFocus(false);
-                        }
+                        },
+                        id: 'searchBar'
                     })
                 ),
-                hasSelectAll && _react2.default.createElement(_selectItem2.default, {
+                !!this.filteredOptions().length && _react2.default.createElement(_selectItem2.default, {
+                    handleEnterPress: this.props.handleEnterPress,
+                    handleClickPressOnIcon: this.props.handleClickPressOnIcon,
                     focused: focusIndex === 0,
                     checked: this.allAreSelected(),
                     option: selectAllOption,
@@ -205,9 +238,21 @@ var SelectPanel = function (_Component) {
                         return _this2.handleItemClicked(0);
                     },
                     ItemRenderer: ItemRenderer,
-                    disabled: disabled
+                    disabled: disabled,
+                    options: this.props.options
                 }),
+                !this.filteredOptions().length && _react2.default.createElement(
+                    'span',
+                    { className: 'item-renderer' },
+                    _react2.default.createElement(
+                        'span',
+                        { style: style },
+                        (0, _getString2.default)("addUser", overrideStrings)
+                    )
+                ),
                 _react2.default.createElement(_selectList2.default, _extends({}, this.props, {
+                    handleEnterPress: this.props.handleEnterPress,
+                    handleClickPressOnIcon: this.props.handleClickPressOnIcon,
                     options: this.filteredOptions(),
                     focusIndex: focusIndex - 1,
                     onClick: function onClick(e, index) {
@@ -249,6 +294,29 @@ var styles = {
         width: "100%",
         boxSizing: 'border-box',
         padding: "0.5em"
+    },
+    itemContainer: {
+        boxSizing: 'border-box',
+        backgroundColor: '#fff',
+        color: '#666666',
+        cursor: 'pointer',
+        display: 'block',
+        padding: '8px 10px'
+    },
+    itemContainerHover: {
+        backgroundColor: '#ebf5ff',
+        outline: 0
+    },
+    label: {
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        borderBottomRightRadius: '2px',
+        borderTopRightRadius: '2px',
+        cursor: 'default',
+        padding: '2px 5px'
+    },
+    labelDisabled: {
+        opacity: 0.5
     }
 };
 

@@ -26,6 +26,8 @@ type Props = {
     options: Array<Option>,
     selected: Array<any>,
     onSelectedChanged?: (selected: Array<any>) => void,
+    handleEnterPress?: (inputString: string) => void,
+    handleClickPressOnIcon?: (email: string) => void,
     valueRenderer?: (
         selected: Array<any>,
         options: Array<Option>
@@ -114,6 +116,8 @@ class MultiSelect extends Component<Props> {
             shouldToggleOnHover,
             hasSelectAll,
             overrideStrings,
+            handleEnterPress,
+            handleClickPressOnIcon,
         } = this.props;
 
         return <div className="multi-select">
@@ -128,6 +132,8 @@ class MultiSelect extends Component<Props> {
                     hasSelectAll,
                     selectAllLabel,
                     onSelectedChanged: this.handleSelectedChanged,
+                    handleEnterPress: handleEnterPress,
+                    handleClickPressOnIcon: handleClickPressOnIcon,
                     disabled,
                     disableSearch,
                     filterOptions,

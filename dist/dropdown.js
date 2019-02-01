@@ -33,25 +33,23 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Dropdown = function (_Component) {
     _inherits(Dropdown, _Component);
 
-    function Dropdown() {
-        var _ref;
-
-        var _temp, _this, _ret;
-
+    function Dropdown(props) {
         _classCallCheck(this, Dropdown);
 
-        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-            args[_key] = arguments[_key];
-        }
+        var _this = _possibleConstructorReturn(this, (Dropdown.__proto__ || Object.getPrototypeOf(Dropdown)).call(this, props));
 
-        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Dropdown.__proto__ || Object.getPrototypeOf(Dropdown)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+        _this.state = {
             expanded: false,
             hasFocus: false
-        }, _this.handleDocumentClick = function (event) {
+        };
+
+        _this.handleDocumentClick = function (event) {
             if (_this.wrapper && !_this.wrapper.contains(event.target)) {
                 _this.setState({ expanded: false });
             }
-        }, _this.handleKeyDown = function (e) {
+        };
+
+        _this.handleKeyDown = function (e) {
             switch (e.which) {
                 case 27:
                     // Escape
@@ -72,32 +70,44 @@ var Dropdown = function (_Component) {
             }
 
             e.preventDefault();
-        }, _this.handleFocus = function (e) {
+        };
+
+        _this.handleFocus = function (e) {
             var hasFocus = _this.state.hasFocus;
 
 
             if (e.target === _this.wrapper && !hasFocus) {
                 _this.setState({ hasFocus: true });
             }
-        }, _this.handleBlur = function (e) {
+        };
+
+        _this.handleBlur = function (e) {
             var hasFocus = _this.state.hasFocus;
 
 
             if (hasFocus) {
                 _this.setState({ hasFocus: false });
             }
-        }, _this.handleMouseEnter = function (e) {
+        };
+
+        _this.handleMouseEnter = function (e) {
             _this.handleHover(true);
-        }, _this.handleMouseLeave = function (e) {
+        };
+
+        _this.handleMouseLeave = function (e) {
             _this.handleHover(false);
-        }, _this.handleHover = function (toggleExpanded) {
+        };
+
+        _this.handleHover = function (toggleExpanded) {
             var shouldToggleOnHover = _this.props.shouldToggleOnHover;
 
 
             if (shouldToggleOnHover) {
                 _this.toggleExpanded(toggleExpanded);
             }
-        }, _this.toggleExpanded = function (value) {
+        };
+
+        _this.toggleExpanded = function (value) {
             var isLoading = _this.props.isLoading;
             var expanded = _this.state.expanded;
 
@@ -113,7 +123,9 @@ var Dropdown = function (_Component) {
             if (!newExpanded && _this.wrapper) {
                 _this.wrapper.focus();
             }
-        }, _temp), _possibleConstructorReturn(_this, _ret);
+        };
+
+        return _this;
     }
 
     _createClass(Dropdown, [{
@@ -179,8 +191,8 @@ var Dropdown = function (_Component) {
                     'aria-readonly': 'true',
                     'aria-disabled': disabled,
                     style: styles.dropdownContainer,
-                    ref: function ref(_ref2) {
-                        return _this2.wrapper = _ref2;
+                    ref: function ref(_ref) {
+                        return _this2.wrapper = _ref;
                     },
                     onKeyDown: this.handleKeyDown,
                     onFocus: this.handleFocus,

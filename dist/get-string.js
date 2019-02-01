@@ -1,13 +1,17 @@
-// @flow
-const strings = {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+var strings = {
     selectSomeItems: "Select some items...",
     allItemsAreSelected: "All items are selected",
     selectAll: "Select All",
     search: "Search",
-    addUser: "Add a user by pressing Enter on keyboard",
+    addUser: "Add a user by pressing Enter on keyboard"
 };
 
-function getString(key: string, overrideStrings: ?{[string]: string}): string {
+function getString(key, overrideStrings) {
     if (overrideStrings && overrideStrings[key]) {
         return overrideStrings[key];
     }
@@ -15,4 +19,4 @@ function getString(key: string, overrideStrings: ?{[string]: string}): string {
     return strings[key];
 }
 
-export default getString;
+exports.default = getString;

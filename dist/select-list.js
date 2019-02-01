@@ -31,18 +31,12 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var SelectList = function (_Component) {
     _inherits(SelectList, _Component);
 
-    function SelectList() {
-        var _ref;
-
-        var _temp, _this, _ret;
-
+    function SelectList(props) {
         _classCallCheck(this, SelectList);
 
-        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-            args[_key] = arguments[_key];
-        }
+        var _this = _possibleConstructorReturn(this, (SelectList.__proto__ || Object.getPrototypeOf(SelectList)).call(this, props));
 
-        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = SelectList.__proto__ || Object.getPrototypeOf(SelectList)).call.apply(_ref, [this].concat(args))), _this), _this.handleSelectionChanged = function (option, checked) {
+        _this.handleSelectionChanged = function (option, checked) {
             var _this$props = _this.props,
                 selected = _this$props.selected,
                 onSelectedChanged = _this$props.onSelectedChanged,
@@ -60,7 +54,9 @@ var SelectList = function (_Component) {
                 var removed = [].concat(_toConsumableArray(selected.slice(0, _index)), _toConsumableArray(selected.slice(_index + 1)));
                 onSelectedChanged(removed);
             }
-        }, _temp), _possibleConstructorReturn(_this, _ret);
+        };
+
+        return _this;
     }
 
     _createClass(SelectList, [{
@@ -85,6 +81,8 @@ var SelectList = function (_Component) {
                         key: o.hasOwnProperty("key") ? o.key : i
                     },
                     _react2.default.createElement(_selectItem2.default, {
+                        handleEnterPress: _this2.props.handleEnterPress,
+                        handleClickPressOnIcon: _this2.props.handleClickPressOnIcon,
                         focused: focusIndex === i,
                         option: o,
                         onSelectionChanged: function onSelectionChanged(c) {

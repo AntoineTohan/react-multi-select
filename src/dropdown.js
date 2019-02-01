@@ -23,6 +23,10 @@ type State = {
 };
 
 class Dropdown extends Component<Props, State> {
+    constructor(props) {
+        super(props);
+    }
+
     state = {
         expanded: false,
         hasFocus: false,

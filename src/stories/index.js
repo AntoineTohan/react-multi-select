@@ -7,6 +7,17 @@ import type {
     Option,
 } from '../select-item.js';
 
+function handleEnterPress(inputString) {
+    event.stopPropagation();
+    console.log('enter press adding user : ' + inputString);
+    return ['azerty', 'qwerty', 'yolo'];
+}
+
+function handleClickPressOnIcon(email) {
+    event.stopPropagation();
+    console.log('Click on icon of user : ' + email);
+}
+
 const shortList = [
     {label: "Brian Genisio", value: 1},
     {label: "John Doe", value: 2},
@@ -147,6 +158,8 @@ class StatefulMultiSelect extends Component<SMSProps, SMSState> {
             <MultiSelect
                 options={options}
                 onSelectedChanged={this.handleSelectedChanged.bind(this)}
+                handleEnterPress={handleEnterPress}
+                handleClickPressOnIcon={handleClickPressOnIcon}
                 selected={selected}
                 valueRenderer={valueRenderer}
                 ItemRenderer={ItemRenderer}
@@ -253,5 +266,17 @@ storiesOf('MultiSelect', module)
             allItemsAreSelected: "ALl ItEmS aRe SeLeCtEd",
             selectAll: "SeLeCt AlL",
             search: "SeArCh",
+        }}
+    />)
+    .add('Custom Eolementhe multi select', () => <StatefulMultiSelect
+        options={studentsList}
+        handleEnterPress={handleEnterPress}
+        handleClickPressOnIcon={handleClickPressOnIcon}
+        overrideStrings={{
+            selectSomeItems: "Select some items...",
+            allItemsAreSelected: "All items are selected",
+            selectAll: "Select All",
+            search: "Search",
+            addUser: "Adding a user by pressing Enter",
         }}
     />);

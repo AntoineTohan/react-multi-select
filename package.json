@@ -19,6 +19,8 @@
     "flow": "flow; test $? -eq 0 -o $? -eq 2"
   },
   "devDependencies": {
+    "@storybook/addons": "^3.4.11",
+    "@storybook/react": "^3.4.11",
     "babel-cli": "^6.14.0",
     "babel-core": "^6.14.0",
     "babel-eslint": "^8.2.2",
@@ -29,6 +31,7 @@
     "babel-plugin-transform-runtime": "^6.15.0",
     "babel-polyfill": "^6.13.0",
     "babel-preset-react-app": "^0.2.1",
+    "babel-runtime": "^6.26.0",
     "chai": "^3.5.0",
     "enzyme": "^2.2.0",
     "escope": "^3.6.0",
@@ -47,16 +50,17 @@
     "react-dom": "^15.3.2",
     "sinon": "^1.17.6",
     "uglify-js": "^2.8.14",
-    "webpack": "^2.2.1",
-    "@storybook/react": "^3.4.11",
-    "@storybook/addons": "^3.4.11",
-    "babel-runtime": "^6.26.0"
+    "webpack": "^2.2.1"
   },
   "peerDependencies": {
     "react": "^0.14.7 || ^15.0.0"
   },
   "dependencies": {
-    "fuzzy-match-utils": "^1.2.0"
+    "@fortawesome/fontawesome-svg-core": "^1.2.13",
+    "@fortawesome/free-solid-svg-icons": "^5.7.0",
+    "@fortawesome/react-fontawesome": "^0.1.4",
+    "fuzzy-match-utils": "^1.2.0",
+    "jquery": "^3.3.1"
   },
   "main": "dist/index.js",
   "engines": {

@@ -19,6 +19,8 @@ type Props = {
     selected: Array<any>,
     selectAllLabel?: string,
     onSelectedChanged: (selected: Array<any>) => void,
+    handleEnterPress?: (inputString: string) => void,
+    handleClickPressOnIcon?: (email: string) => void,
     disabled?: boolean,
     disableSearch?: boolean,
     hasSelectAll: boolean,
@@ -33,6 +35,10 @@ type State = {
 };
 
 class SelectPanel extends Component<Props, State> {
+    constructor(props) {
+        super(props);
+    }
+
     state = {
         searchHasFocus: false,
         searchText: "",
@@ -91,6 +97,17 @@ class SelectPanel extends Component<Props, State> {
 
                 this.updateFocus(1);
                 break;
+            case 13: // Enter
+                if (e.altKey) {
+                    return;
+                }
+
+                this.props.handleEnterPress(this.state.searchText);
+                document.getElementById('searchBar').value = '';
+                this.setState({
+                    searchText: '',
+                });
+                break;
             default:
                 return;
         }
@@ -138,13 +155,17 @@ class SelectPanel extends Component<Props, State> {
             selectAllLabel,
             disabled,
             disableSearch,
-            hasSelectAll,
             overrideStrings,
         } = this.props;
 
         const selectAllOption = {
             label: selectAllLabel || getString("selectAll", overrideStrings),
             value: "",
+        };
+
+        const style = {
+            ...styles.label,
+            ...(disabled ? styles.labelDisabled : undefined),
         };
 
         const focusedSearchStyle = searchHasFocus
@@ -165,11 +186,14 @@ class SelectPanel extends Component<Props, State> {
                     style={{...styles.search, ...focusedSearchStyle}}
                     onFocus={() => this.handleSearchFocus(true)}
                     onBlur={() => this.handleSearchFocus(false)}
+                    id={'searchBar'}
                 />
             </div>}
 
-            {hasSelectAll &&
+            {!!this.filteredOptions().length &&
               <SelectItem
+                  handleEnterPress={this.props.handleEnterPress}
+                  handleClickPressOnIcon={this.props.handleClickPressOnIcon}
                   focused={focusIndex === 0}
                   checked={this.allAreSelected()}
                   option={selectAllOption}
@@ -177,11 +201,21 @@ class SelectPanel extends Component<Props, State> {
                   onClick={() => this.handleItemClicked(0)}
                   ItemRenderer={ItemRenderer}
                   disabled={disabled}
+                  options={this.props.options}
               />
+            }
+            {!this.filteredOptions().length &&
+            <span className="item-renderer">
+                <span style={style}>
+                    {getString("addUser", overrideStrings)}
+                </span>
+            </span>
             }
 
             <SelectList
                 {...this.props}
+                handleEnterPress={this.props.handleEnterPress}
+                handleClickPressOnIcon={this.props.handleClickPressOnIcon}
                 options={this.filteredOptions()}
                 focusIndex={focusIndex - 1}
                 onClick={(e, index) => this.handleItemClicked(index + 1)}
@@ -218,6 +252,29 @@ const styles = {
         width: "100%",
         boxSizing : 'border-box',
         padding: "0.5em",
+    },
+    itemContainer: {
+        boxSizing: 'border-box',
+        backgroundColor: '#fff',
+        color: '#666666',
+        cursor: 'pointer',
+        display: 'block',
+        padding: '8px 10px',
+    },
+    itemContainerHover: {
+        backgroundColor: '#ebf5ff',
+        outline: 0,
+    },
+    label: {
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        borderBottomRightRadius: '2px',
+        borderTopRightRadius: '2px',
+        cursor: 'default',
+        padding: '2px 5px',
+    },
+    labelDisabled: {
+        opacity: 0.5,
     },
 };
 
